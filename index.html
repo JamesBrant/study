@@ -305,5 +305,74 @@ button.addEventListener('click', async () =&gt; {
 <h2>8. 常见排查</h2><ul><li>找不到模块：检查文件路径、大小写及依赖是否安装。</li><li>CSS 不生效：检查是否导入 CSS，规则是否匹配，Loader 顺序是否正确。</li><li>部署后资源 404：检查输出路径、服务器目录和 publicPath，尤其是网站部署在子路径时。</li><li>构建体积过大：先分析产物，再考虑按需加载和依赖替换。</li></ul><div class="note">练习：创建入口文件、导入 CSS，用插件生成 HTML，再将一个功能改为动态导入。参考 <a href="https://webpack.js.org/concepts/">Webpack 官方概念指南</a>。</div>`
 });
 
+const cssIndex = lessons.findIndex(l => l.title === 'CSS 与布局');
+lessons.splice(cssIndex + 1, 0, {group:'WEB 基础',title:'HTML5 与 CSS3 新特性',desc:'通过简单示例学习语义化标签、表单、多媒体以及现代 CSS 的常用写法。',body:String.raw`
+<h2>先了解名称</h2><p>HTML5 通常指现代 HTML 中的一批能力，例如语义化元素、增强的表单和多媒体。CSS3 是多个 CSS 模块的统称，现代 CSS 仍在持续发展；下面也会介绍常用的较新 CSS 能力。</p>
+<h2>一、HTML5 语义化标签</h2><p>语义化是用标签表达内容的作用。例如 header 表示页头，nav 表示导航，main 表示主要内容，article 表示独立文章，footer 表示页脚。浏览器和辅助技术可以更容易理解页面结构。</p><pre><code>&lt;header&gt;&lt;h1&gt;前端学习&lt;/h1&gt;&lt;/header&gt;
+&lt;nav aria-label="主导航"&gt;
+  &lt;a href="#html"&gt;HTML 教程&lt;/a&gt;
+&lt;/nav&gt;
+&lt;main&gt;
+  &lt;article id="html"&gt;
+    &lt;h2&gt;认识 HTML&lt;/h2&gt;
+    &lt;p&gt;HTML 用来描述页面结构。&lt;/p&gt;
+  &lt;/article&gt;
+&lt;/main&gt;
+&lt;footer&gt;学习笔记&lt;/footer&gt;</code></pre><p>这些标签默认不负责美观，仍需 CSS 设置样式。标题按照内容层级使用，链接用于跳转，按钮用于执行操作。</p>
+<h2>二、增强的表单</h2><pre><code>&lt;form action="/register" method="post"&gt;
+  &lt;label for="email"&gt;邮箱&lt;/label&gt;
+  &lt;input id="email" name="email" type="email" required&gt;
+  &lt;label for="day"&gt;学习日期&lt;/label&gt;
+  &lt;input id="day" name="day" type="date"&gt;
+  &lt;label for="hours"&gt;每天学习小时数&lt;/label&gt;
+  &lt;input id="hours" name="hours" type="number" min="1" max="8"&gt;
+  &lt;button type="submit"&gt;提交&lt;/button&gt;
+&lt;/form&gt;</code></pre><p>email 可以触发浏览器的邮箱格式检查，date 提供日期选择，number 可限制数值范围，required 表示必填。不同浏览器的控件外观可能不同。浏览器校验方便用户，但服务端仍需验证数据；示例的提交地址需要服务端实现。</p>
+<h2>三、音频与视频</h2><pre><code>&lt;video controls width="480" poster="cover.jpg"&gt;
+  &lt;source src="lesson.mp4" type="video/mp4"&gt;
+  您的浏览器无法播放视频。
+&lt;/video&gt;
+&lt;audio controls src="lesson.mp3"&gt;浏览器不支持音频。&lt;/audio&gt;</code></pre><p>controls 显示播放控件，poster 是视频播放前的封面。需要提供真实媒体文件；视频应考虑字幕和不同设备的格式兼容性。不要假定浏览器允许带声音的自动播放。</p>
+<h2>四、Canvas 与浏览器存储</h2><p>Canvas 是一块可用 JavaScript 绘图的区域，适合图表和简单动画：</p><pre><code>&lt;canvas id="board" width="240" height="100"&gt;您的浏览器不支持画布。&lt;/canvas&gt;
+&lt;script&gt;
+const ctx = document.querySelector('#board').getContext('2d');
+ctx.fillStyle = '#3067e8';
+ctx.fillRect(10, 10, 100, 50); // x、y、宽、高
+&lt;/script&gt;</code></pre><p>localStorage 可以在同一来源下保存字符串，关闭页面后通常仍保留；用户可以清除数据，也可能因浏览器设置而无法使用。不要把密码等敏感信息存入其中。</p><pre><code>localStorage.setItem('course', 'HTML');
+console.log(localStorage.getItem('course')); // HTML
+localStorage.removeItem('course');</code></pre>
+<h2>五、CSS 选择器和视觉效果</h2><pre><code>.card {
+  border-radius: 12px; /* 圆角 */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .12);
+  background: linear-gradient(135deg, #eaf2ff, #fff);
+}
+input:focus { outline: 2px solid #3067e8; }
+li:nth-child(even) { background: #f5f7fb; }</code></pre><p>focus 选中获得焦点的元素；nth-child(even) 选中父元素下序号为偶数的子元素。保留清晰的焦点样式，方便键盘操作。</p>
+<h2>六、Flex 与 Grid 布局</h2><pre><code>/* Flex：适合一行或一列 */
+.toolbar { display: flex; gap: 12px; align-items: center; }
+/* Grid：适合行列布局 */
+.courses {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@media (max-width: 700px) {
+  .courses { grid-template-columns: 1fr; }
+}</code></pre><p>把 class 为 courses 的容器放入多张卡片，宽屏时显示三列；屏幕宽度不超过 700px 时切换成一列。断点应根据内容是否拥挤来调整。</p>
+<h2>七、过渡、变换和动画</h2><pre><code>.button { transition: transform .2s, background-color .2s; }
+.button:hover { transform: translateY(-2px); background-color: #dce8ff; }
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.card { animation: fade-in .4s ease; }
+@media (prefers-reduced-motion: reduce) {
+  .button { transition: none; }
+  .card { animation: none; }
+}</code></pre><p>transition 在状态变化时平滑过渡；transform 改变视觉位置；@keyframes 定义动画过程。减少动画设置尊重用户的系统偏好。</p>
+<h2>八、CSS 变量</h2><pre><code>:root { --brand: #3067e8; --space: 16px; }
+.card { padding: var(--space); border: 1px solid var(--brand); }
+.button { color: white; background: var(--brand); }</code></pre><p>自定义属性以两个连字符开头，使用 var() 读取；修改变量可以统一调整多处样式。它们遵循层叠和继承规则。</p><div class="note">练习：制作课程卡片，使用语义化标签、Grid 布局和 CSS 变量，并让窄屏时卡片变成单列。参考 <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTML">MDN HTML</a> 和 <a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS">MDN CSS</a>。</div>`});
+
 const nav=document.querySelector('#nav'),content=document.querySelector('#content'),search=document.querySelector('#search');let current=0;function renderNav(){let q=search.value.trim().toLowerCase(),group='';nav.innerHTML='';lessons.forEach((l,i)=>{if(!(l.title+l.desc+l.body.replace(/<[^>]+>/g,'')).toLowerCase().includes(q))return;if(l.group!==group){group=l.group;let x=document.createElement('div');x.className='group';x.textContent=group;nav.append(x)}let b=document.createElement('button');b.textContent=l.title;b.className=i===current?'active':'';b.onclick=()=>{current=i;location.hash=encodeURIComponent(l.title);render();window.scrollTo(0,0)};nav.append(b)});if(!nav.children.length)nav.textContent='没有找到相关课程';}function render(){let l=lessons[current];content.innerHTML='<div class="hero"><div class="eyebrow">'+l.group+' / 学习指南</div><h1>'+l.title+'</h1><p class="intro">'+l.desc+'</p></div>'+l.body;renderNav();document.title=l.title+' | 前端研习室'}function fromHash(){let i=lessons.findIndex(l=>encodeURIComponent(l.title)===location.hash.slice(1));if(i>=0)current=i;render()}search.addEventListener('input',renderNav);window.addEventListener('hashchange',fromHash);fromHash();
 </script></body></html>
