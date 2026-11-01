@@ -1,0 +1,185 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>前端研习室 | 从基础到资深</title><style>
+:root{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#233047;background:#f6f8fb}*{box-sizing:border-box}body{margin:0}header{height:66px;background:#fff;border-bottom:1px solid #e4e9f0;display:flex;align-items:center;padding:0 32px;gap:12px;position:sticky;top:0;z-index:2}.logo{background:#3067e8;color:white;border-radius:9px;padding:8px;font-weight:800}header strong{font-size:17px}header span{color:#8895a8;font-size:13px;margin-left:auto}.layout{display:grid;grid-template-columns:270px minmax(0,1fr);max-width:1500px;margin:auto}aside{height:calc(100vh - 66px);position:sticky;top:66px;overflow:auto;background:#fff;border-right:1px solid #e4e9f0;padding:24px 16px}input{width:100%;border:1px solid #dbe3ed;border-radius:8px;padding:11px;font-size:14px;outline-color:#3067e8}.group{font-size:11px;letter-spacing:1px;color:#98a4b5;font-weight:bold;margin:25px 12px 9px}nav button{width:100%;border:0;background:transparent;text-align:left;padding:10px 12px;border-radius:7px;color:#536177;font-size:14px;cursor:pointer}nav button:hover{background:#f3f6fb}nav button.active{background:#eaf0ff;color:#2459d7;font-weight:700}main{padding:45px 7%;max-width:1050px;width:100%}.eyebrow{color:#3067e8;font-size:12px;font-weight:800;letter-spacing:1px}.intro{color:#718096;line-height:1.8}.hero{border-bottom:1px solid #e2e8f0;padding-bottom:25px;margin-bottom:30px}h1{font-size:36px;letter-spacing:-1px;margin:12px 0}h2{font-size:23px;margin-top:36px}p,li{font-size:15px;line-height:1.9;color:#4d5e73}li{margin:6px 0}pre{background:#172235;color:#d9e7fa;border-radius:10px;padding:20px;overflow:auto;line-height:1.7;font-size:13px}code{font-family:SFMono-Regular,Consolas,monospace}p code,li code{background:#edf2fa;color:#325fc2;padding:2px 5px;border-radius:4px}.note{background:#eef4ff;border-left:3px solid #4276ed;padding:14px 18px;border-radius:4px;color:#425c80;line-height:1.8}.footer{margin-top:50px;padding-top:22px;border-top:1px solid #e2e8f0;color:#91a0b2;font-size:13px}a{color:#3067e8}@media(max-width:700px){header{padding:0 16px}.layout{display:block}aside{position:static;height:auto;border:0;padding:16px}nav{display:flex;gap:5px;overflow:auto}.group{display:none}nav button{white-space:nowrap;width:auto}main{padding:30px 20px}h1{font-size:30px}}
+</style></head><body><header><div class="logo">&lt;/&gt;</div><strong>前端研习室</strong><span>从基础到资深 · 学习手册</span></header><div class="layout"><aside><input id="search" placeholder="搜索技术或知识点" aria-label="搜索课程"><nav id="nav"></nav></aside><main><div id="content"></div><div class="footer">前端研习室 · 从理解原理到解决真实问题</div></main></div><script>
+const lessons=[
+{group:'WEB 基础',title:'HTML 与语义化',desc:'用正确的结构描述内容，让浏览器、搜索引擎和辅助技术都能理解页面。',body:`<h2>HTML 是什么</h2><p>HTML 用元素组织内容。浏览器解析标签形成 DOM 树，CSS 决定外观，JavaScript 处理交互。优先选择能表达含义的元素，而不是用大量 div 模拟。</p><pre><code>&lt;main&gt;
+  &lt;h1&gt;课程目录&lt;/h1&gt;
+  &lt;nav aria-label="课程导航"&gt;
+    &lt;a href="#css"&gt;学习 CSS&lt;/a&gt;
+  &lt;/nav&gt;
+  &lt;button type="button"&gt;开始学习&lt;/button&gt;
+&lt;/main&gt;</code></pre><h2>使用要点</h2><ul><li>使用标题形成清晰层级；导航使用 nav，主要内容使用 main。</li><li>跳转用 a，触发操作用 button；原生控件自带键盘行为。</li><li>图片提供有意义的 alt；表单控件通过 label 关联名称。</li></ul><div class="note">练习：只用键盘操作页面，确认焦点可见、顺序合理，所有按钮都能使用。</div>`},
+{group:'WEB 基础',title:'CSS 与布局',desc:'理解盒模型、层叠和现代布局，构建可靠的响应式界面。',body:`<h2>盒模型与层叠</h2><p>元素占据的空间由内容、内边距、边框和外边距构成。设置 border-box 后，指定的宽度包含内边距和边框。样式冲突时，浏览器结合来源、重要性、选择器优先级与声明顺序决定结果。</p><pre><code>* { box-sizing: border-box; }
+.layout { display: grid; grid-template-columns: 240px 1fr; gap: 24px; }
+@media (max-width: 700px) {
+  .layout { grid-template-columns: 1fr; }
+}</code></pre><h2>如何选择布局</h2><ul><li>Flex 适合单行或单列排列，Grid 适合二维布局。</li><li>用相对单位、弹性容器和媒体查询适配不同屏幕，避免依赖固定宽度。</li><li>定位元素前先检查包含块；z-index 受层叠上下文约束。</li></ul><div class="note">练习：实现桌面侧栏、手机单列的文章布局，并检查长文本是否溢出。</div>`},
+{group:'WEB 基础',title:'JavaScript 核心',desc:'掌握作用域、闭包、对象和异步，理解代码为什么这样执行。',body:`<h2>作用域与闭包</h2><p>函数可以访问定义时所在的词法作用域。即使外层函数已经返回，内部函数仍可访问其变量，这就是闭包。它常用于封装状态，也要注意避免长期持有不需要的大对象。</p><pre><code>function createCounter() {
+  let count = 0;
+  return () =&gt; ++count;
+}
+const next = createCounter();
+console.log(next(), next()); // 1 2</code></pre><h2>异步与事件循环</h2><p>同步代码先执行；Promise 回调进入微任务队列，定时器回调是任务。当前任务结束后会先清空微任务，再处理后续任务。实际执行时机还受浏览器调度影响。</p><pre><code>console.log('A');
+setTimeout(() =&gt; console.log('B'), 0);
+Promise.resolve().then(() =&gt; console.log('C'));
+// A → C → B</code></pre><p>还应理解 this 的调用方式、原型链、ES 模块、异常处理，以及引用类型的共享和复制。</p>`},
+{group:'WEB 基础',title:'TypeScript',desc:'用类型表达约束，及早发现错误，并让协作接口更清晰。',body:`<h2>类型与收窄</h2><p>TypeScript 在编译阶段检查类型，最终输出 JavaScript；类型本身不会在运行时验证外部数据。联合类型表示多种可能，通过判断可以收窄到具体类型。</p><pre><code>type Result = { ok: true; data: string } | { ok: false; error: string };
+function show(result: Result) {
+  return result.ok ? result.data : result.error;
+}
+function first&lt;T&gt;(items: T[]): T | undefined {
+  return items[0];
+}</code></pre><p>泛型用于保留输入和输出之间的关系。优先使用明确的类型与 unknown，避免用 any 绕过检查；接口数据仍需运行时校验。</p><div class="note">练习：为接口响应定义成功和失败类型，并处理空数据和网络错误。</div>`},
+{group:'浏览器与网络',title:'浏览器运行原理',desc:'从请求到渲染，建立排查页面问题的完整路径。',body:`<h2>页面如何显示</h2><p>浏览器获取 HTML 后构建 DOM，解析 CSS 形成样式信息，再计算布局、绘制并合成页面。脚本、样式和资源加载方式都会影响这一过程。</p><h2>实践中的定位</h2><ul><li>使用 Network 检查请求耗时、状态码和缓存；使用 Performance 查看长任务与渲染开销。</li><li>几何尺寸变化可能触发布局；颜色变化通常只需重新绘制。批量读写布局，减少交替读取和修改。</li><li>用 Memory 工具排查未清理的事件监听器、定时器和被长期引用的对象。</li></ul><div class="note">练习：录制一次卡顿操作，找到耗时最长的任务，再对比优化前后的记录。</div>`},
+{group:'浏览器与网络',title:'HTTP 与网络',desc:'理解请求、缓存、跨域与认证，能够定位前后端通信问题。',body:`<h2>请求与响应</h2><p>HTTP 请求包含方法、路径、请求头和可选的请求体；响应包含状态码、响应头和内容。GET 通常用于读取，POST 常用于提交；要依据接口契约处理错误和重试。</p><pre><code>async function loadUsers() {
+  const response = await fetch('/api/users');
+  if (!response.ok) throw new Error('请求失败: ' + response.status);
+  return response.json();
+}</code></pre><h2>缓存与跨域</h2><p>Cache-Control 控制缓存策略；ETag 可用于协商缓存。同源策略限制跨源读取，CORS 需要服务端返回允许的响应头，复杂请求可能先发送预检请求。Cookie 的安全属性和跨站行为也需要服务端配合配置。</p>`},
+{group:'框架与工程',title:'React 与 Vue',desc:'掌握组件、状态与数据流，再理解框架的更新机制。',body:`<h2>组件与状态</h2><p>组件将界面和行为封装成可复用单元。状态变化驱动视图更新；共享状态应放在合适的共同层级。保持单向数据流，让数据来源和修改路径可追踪。</p><pre><code>// React：状态更新后重新渲染
+function Counter() {
+  const [count, setCount] = React.useState(0);
+  return &lt;button onClick={() =&gt; setCount(n =&gt; n + 1)}&gt;
+    {count}
+  &lt;/button&gt;;
+}</code></pre><h2>进阶重点</h2><ul><li>理解 React 的渲染与副作用清理，或 Vue 的响应式追踪与组件生命周期。</li><li>区分本地状态、跨组件状态和服务端数据；不要把所有数据放入全局状态。</li><li>理解 CSR、SSR 和静态生成的取舍：首屏、SEO、服务器成本与复杂度。</li></ul>`},
+{group:'框架与工程',title:'工程化与构建',desc:'把代码可靠地转换、检查、构建和交付。',body:`<h2>构建工具做什么</h2><p>构建工具处理模块依赖、资源转换和打包。开发服务器提供快速反馈；生产构建通常包含压缩、按需拆分和资源指纹。Vite 和 Webpack 的配置方式不同，但都需要理解依赖图和构建产物。</p><h2>团队交付流程</h2><ol><li>使用包管理器锁定依赖版本，提交锁文件。</li><li>通过格式化、静态检查和代码评审维护一致性。</li><li>在 CI 中安装依赖、运行测试并构建；部署后监测，出现问题时回滚。</li></ol><div class="note">练习：分析构建产物，找出最大的依赖，评估是否可以按路由延迟加载。</div>`},
+{group:'框架与工程',title:'测试与质量',desc:'用合适层级的测试保护关键行为，而不是只追求覆盖率。',body:`<h2>测试层级</h2><p>单元测试验证独立逻辑；组件测试关注用户可见行为；端到端测试覆盖关键业务流程。越接近真实环境通常越能发现集成问题，但运行和维护成本也更高。</p><pre><code>// 伪代码：验证行为和边界
+expect(formatPrice(12)).toBe('¥12.00');
+expect(formatPrice(0)).toBe('¥0.00');</code></pre><p>优先覆盖支付、权限、表单等高风险路径，以及错误、空状态和边界条件。避免过度依赖内部实现，使重构不会无故破坏测试。</p>`},
+{group:'资深进阶',title:'性能优化',desc:'先测量，再定位瓶颈，最后用数据验证优化是否有效。',body:`<h2>关注用户体验</h2><p>LCP 关注主要内容加载速度，INP 关注交互响应，CLS 关注意外布局偏移。实验室测试有助于复现，真实用户数据更能反映设备和网络差异。</p><h2>常见优化</h2><ul><li>压缩和合理选择图片格式，延迟加载非首屏资源，为图片预留尺寸。</li><li>减少首屏 JavaScript，按需加载，避免长任务阻塞主线程。</li><li>对于大量数据，考虑分页或虚拟列表；先用性能工具确认瓶颈。</li></ul><div class="note">实践：记录优化前后的指标和测试条件，确认改善没有损害功能或可访问性。</div>`},
+{group:'资深进阶',title:'前端安全',desc:'理解常见攻击路径，与服务端共同建立防护。',body:`<h2>XSS 与 CSRF</h2><p>XSS 是攻击者让恶意脚本在页面执行。优先使用框架默认的文本转义，谨慎处理不可信 HTML，配合内容安全策略。CSRF 利用用户已有的登录状态发起非预期请求，可结合 SameSite Cookie、CSRF token 和服务端来源校验防护。</p><h2>认证与授权</h2><p>前端隐藏按钮只是界面控制，真正的权限检查必须在服务端执行。敏感信息不应写入前端代码；使用 HTTPS 并妥善设置 Cookie 的 Secure 和 HttpOnly 属性。</p>`},
+{group:'资深进阶',title:'架构与线上排障',desc:'围绕业务复杂度设计系统，并对交付后的运行结果负责。',body:`<h2>设计与取舍</h2><p>先明确业务目标、约束和团队规模，再划分模块与职责。组件库应沉淀稳定的共性；避免过早抽象。评估方案时比较维护成本、性能、迁移风险和团队熟悉度。</p><h2>线上问题处理</h2><ol><li>确认影响范围，必要时先回滚或降级。</li><li>通过错误监控、日志、网络请求和版本信息缩小范围，尽量复现。</li><li>修复后验证关键路径，补充针对性测试，复盘根因和预防措施。</li></ol><div class="note">资深能力的体现：能说清问题、方案取舍、协作过程和可衡量的结果。</div>`}
+];
+const extra = [
+`<h2>从一个表单开始</h2><p>表单把用户输入交给浏览器处理。<code>label</code> 的 for 对应输入框的 id，点击文字也能聚焦输入框；required 表示提交前必须填写。</p><pre><code>&lt;form action="/search" method="get"&gt;
+  &lt;label for="keyword"&gt;搜索课程&lt;/label&gt;
+  &lt;input id="keyword" name="q" required&gt;
+  &lt;button type="submit"&gt;搜索&lt;/button&gt;
+&lt;/form&gt;</code></pre><p>输入「CSS」后提交，浏览器会请求 <code>/search?q=CSS</code>。这个地址需要服务端实现，HTML 本身不会自动搜索课程。</p><p><strong>常见错误：</strong>用 div 做按钮却没有键盘支持。优先使用 button，并为图片填写描述内容的 alt；纯装饰图片用空 alt。</p>`,
+`<h2>一步步理解盒子</h2><p>假设卡片宽 200px、内边距 20px。默认 content-box 的实际宽度是 240px（不含边框）；使用 border-box 后总宽度仍为 200px。</p><pre><code>.card {
+  box-sizing: border-box; /* 宽度包含内边距和边框 */
+  width: 200px;
+  padding: 20px;
+  border: 1px solid #ddd;
+}
+.row { display: flex; gap: 12px; }
+.row > * { flex: 1; min-width: 0; }</code></pre><p>Flex 中，容器负责排列子元素；<code>gap</code> 设置间距，<code>flex: 1</code> 让子元素分配剩余空间。使用开发者工具的布局面板可以直观看到盒子尺寸。</p><div class="note">练习：创建两张并排卡片，再用媒体查询让窄屏时纵向排列。</div>`,
+`<h2>变量、函数与数组</h2><p>变量保存数据；函数把一段操作命名；数组保存多个值。先理解输入与输出，再组合出复杂逻辑。</p><pre><code>const scores = [80, 90, 100];
+function average(list) {
+  let total = 0;
+  for (const score of list) total += score;
+  return list.length ? total / list.length : 0;
+}
+console.log(average(scores)); // 90</code></pre><h2>异步请求如何处理错误</h2><pre><code>async function getData() {
+  try {
+    const response = await fetch('/api/data');
+    if (!response.ok) throw new Error('请求失败');
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    return null; // 调用方需要处理空结果
+  }
+}</code></pre><p>await 等待 Promise 的结果；网络失败或主动抛出的错误会进入 catch。接口地址只是示例，需要真实服务支持。</p>`,
+`<h2>为对象和函数标注类型</h2><pre><code>type User = { name: string; age?: number };
+function greet(user: User): string {
+  return '你好，' + user.name;
+}
+greet({ name: '小明' }); // 正确，age 可省略
+// greet({ name: 123 }); // 类型错误</code></pre><p>问号表示属性可缺省。类型检查帮助开发阶段发现传错参数，但不会自动检查接口返回值。处理外部数据时先检查类型，再使用。</p><pre><code>function readName(value: unknown): string {
+  if (typeof value === 'string') return value;
+  return '未知';
+}</code></pre><div class="note">练习：给商品定义名称和价格类型，写一个返回商品描述的函数。</div>`,
+`<h2>用开发者工具观察</h2><ol><li>打开页面，按 F12 或右键选择“检查”。</li><li>在 Network 面板刷新页面，点击请求查看状态码和耗时。</li><li>在 Elements 面板选择元素，查看计算后的样式和盒模型。</li><li>在 Performance 面板录制卡顿过程，找到耗时较长的任务。</li></ol><p>例如页面点击后停顿，先录制点击过程；如果主线程中一段 JavaScript 占用很久，再分析这段代码。不要在没有测量时猜测瓶颈。</p><pre><code>// 批量读取，再批量写入，避免反复交替
+const heights = items.map(item =&gt; item.offsetHeight);
+items.forEach((item, i) =&gt; {
+  item.style.height = heights[i] + 10 + 'px';
+});</code></pre>`,
+`<h2>看懂一个请求</h2><pre><code>GET /api/users HTTP/1.1
+Accept: application/json
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[{"name":"小明"}]</code></pre><p>第一行说明方法和路径；响应中的 200 表示请求成功，JSON 是返回的数据。常见状态码还有 404（资源不存在）和 500（服务端错误）。</p><h2>跨域示例</h2><p>从 <code>https://a.example</code> 访问 <code>https://b.example</code> 属于跨源。浏览器是否允许页面读取响应，由服务端的 CORS 响应头等规则决定；仅在前端修改请求通常无法解决服务端未授权的问题。</p><div class="note">练习：在 Network 中查看一个请求的方法、状态码、响应和缓存头。</div>`,
+`<h2>用 Vue 实现同一个计数器</h2><pre><code>&lt;script setup&gt;
+import { ref } from 'vue';
+const count = ref(0); // 可响应的状态
+&lt;/script&gt;
+&lt;template&gt;
+  &lt;button @click="count++"&gt;{{ count }}&lt;/button&gt;
+&lt;/template&gt;</code></pre><p>点击按钮改变 count，Vue 更新依赖它的视图。React 示例通过 setCount 更新状态；两者都不应直接手工修改框架管理的 DOM。</p><h2>如何划分组件</h2><p>例如课程页面可以拆成搜索框、目录和文章。把选中的课程放在它们共同的父组件，由父组件传递数据和操作，避免各组件维护互相矛盾的副本。</p>`,
+`<h2>一次构建的基本过程</h2><ol><li>从入口文件出发，查找 import 形成依赖关系。</li><li>转换 TypeScript、处理 CSS 和图片等资源。</li><li>生成浏览器可使用的文件，按配置拆分和压缩。</li><li>将构建目录部署到服务器，并检查资源路径。</li></ol><pre><code>npm install        # 根据项目依赖安装
+npm run build      # 执行 package.json 中的 build 脚本</code></pre><p>命令是否可用取决于项目配置。CI 可以在每次提交后自动安装、测试和构建，让问题更早暴露。部署前要确认环境变量和静态资源的基础路径。</p>`,
+`<h2>一个可运行的测试思路</h2><pre><code>// 使用 Vitest；需要先安装并配置项目
+import { describe, it, expect } from 'vitest';
+function add(a, b) { return a + b; }
+describe('add', () =&gt; {
+  it('能计算两个数的和', () =&gt; {
+    expect(add(2, 3)).toBe(5);
+  });
+});</code></pre><p>测试分为准备、执行和断言：提供输入，调用功能，再检查结果。除了正常值，还应测试空值、错误和边界。组件测试尽量模拟点击和输入，验证用户看到的结果。</p><div class="note">练习：为登录表单写测试，检查空密码时是否显示提示。</div>`,
+`<h2>从一个具体问题入手</h2><p>如果首屏很慢，先在 Network 查看大文件和请求顺序，再在 Performance 中观察脚本是否阻塞主线程。根据证据选择优化，并在相同条件下比较结果。</p><pre><code>&lt;!-- 为图片预留空间，减少布局跳动 --&gt;
+&lt;img src="course.jpg" alt="课程封面"
+     width="800" height="450" loading="lazy"&gt;</code></pre><p>这个 lazy 示例适合非首屏图片；首屏关键图片通常不应盲目延迟加载。拆包同样有成本，只有在实际减少关键路径负担时才有价值。</p><div class="note">练习：用 Lighthouse 或性能面板测量一个页面，记录优化前后的结果和网络条件。</div>`,
+`<h2>安全地展示用户输入</h2><pre><code>const name = '&lt;img src=x onerror=alert(1)&gt;';
+const element = document.querySelector('#name');
+element.textContent = name; // 当作文本显示
+// 不要把不可信内容直接赋给 innerHTML</code></pre><p>textContent 不会把输入解析成 HTML。如果业务确实需要富文本，应使用可靠的净化方案，并在服务端配合校验。内容安全策略是额外防线，不能替代安全编码。</p><p><strong>权限示例：</strong>前端可以隐藏“删除”按钮，但攻击者仍可直接请求接口；服务端必须检查用户是否有删除权限。</p>`,
+`<h2>用一个案例串起来</h2><p>假设课程列表打开缓慢：先确认影响范围和发布时间，再查看监控与 Network；如果发现接口耗时正常而渲染长任务明显，就进一步检查列表渲染。</p><ol><li>记录基线：数据量、设备、耗时和复现步骤。</li><li>评估分页或虚拟列表，比较体验、实现成本和维护难度。</li><li>上线后观察真实指标与错误率，准备回滚方式。</li><li>记录结论，让团队下次能更快解决类似问题。</li></ol><p>架构设计也遵循这个思路：从需求和约束出发，先选择足够简单的方案，再根据真实问题调整。</p>`
+];
+lessons.forEach((lesson, i) => { lesson.body += extra[i]; });
+
+lessons.splice(3, 0,
+{group:'WEB 基础',title:'JS 原型与原型链',desc:'理解对象如何共享属性和方法，以及属性查找的过程。',body:`<h2>先认识对象和属性</h2><p>对象是一组属性的集合。读取 <code>person.name</code> 时，JavaScript 会先在 person 自身查找 name；找不到时，再沿着它的原型继续查找。</p><pre><code>const person = { name: '小明' };
+console.log(person.name); // 小明</code></pre><h2>什么是原型</h2><p>每个普通对象都有一个指向另一个对象或 null 的内部原型链接。可以用 <code>Object.getPrototypeOf</code> 查看。原型也是对象，因此多个对象可以通过它共享方法。</p><pre><code>const animal = {
+  speak() { return '你好'; }
+};
+const cat = Object.create(animal);
+cat.name = '小猫';
+console.log(cat.name);    // 小猫：来自 cat 自身
+console.log(cat.speak()); // 你好：沿原型找到 speak
+console.log(Object.getPrototypeOf(cat) === animal); // true</code></pre><p>这里的查找顺序是 <code>cat → animal → Object.prototype → null</code>。找不到属性时结果为 undefined。这个查找路径就是原型链。</p><h2>构造函数与 prototype</h2><pre><code>function Person(name) {
+  this.name = name; // 每个实例自己的数据
+}
+Person.prototype.sayHi = function () {
+  return '你好，我是' + this.name;
+};
+const a = new Person('小明');
+const b = new Person('小红');
+console.log(a.sayHi()); // 你好，我是小明
+console.log(a.sayHi === b.sayHi); // true，共享方法
+console.log(Object.getPrototypeOf(a) === Person.prototype); // true</code></pre><p>函数的 <code>prototype</code> 属性用于作为通过 new 创建的实例的原型；对象的内部原型链接则指向其原型对象。两者相关，但不是同一个概念。调用 <code>a.sayHi()</code> 时，方法里的 this 指向 a。</p><h2>属性遮蔽</h2><pre><code>const parent = { color: '蓝色' };
+const child = Object.create(parent);
+child.color = '红色';
+console.log(child.color); // 红色，自身属性优先
+console.log(parent.color); // 蓝色，原型没有改变
+delete child.color;
+console.log(child.color); // 蓝色，重新从原型找到</code></pre><p><code>Object.hasOwn(child, 'color')</code> 可以判断属性是否属于对象自身。class 语法提供更方便的写法，其实例方法仍基于原型共享。</p><div class="note">练习：创建一个共享 walk 方法的原型，再创建两个对象，分别设置名字并调用 walk。</div>`},
+{group:'WEB 基础',title:'浏览器事件机制',desc:'从监听点击开始，理解捕获、目标、冒泡以及事件委托。',body:`<h2>监听事件</h2><p>事件是浏览器对用户操作或其他变化的通知，例如 click、input 和 submit。使用 addEventListener 注册处理函数。</p><pre><code>&lt;button id="btn"&gt;点击我&lt;/button&gt;
+&lt;script&gt;
+const button = document.querySelector('#btn');
+button.addEventListener('click', function (event) {
+  console.log('按钮被点击', event.type);
+});
+&lt;/script&gt;</code></pre><p>事件对象提供相关信息，例如事件类型和触发元素。同一个元素可以注册多个监听器；不再需要时可以移除。</p><h2>事件传播的三个阶段</h2><p>点击嵌套元素时，事件通常先从文档向目标传播（捕获），到达目标，再向外传播（冒泡）。不是所有事件都冒泡。</p><pre><code>&lt;div id="outer"&gt;&lt;button id="inner"&gt;点击&lt;/button&gt;&lt;/div&gt;
+&lt;script&gt;
+const outer = document.querySelector('#outer');
+const inner = document.querySelector('#inner');
+outer.addEventListener('click', () =&gt; console.log('外层捕获'), true);
+inner.addEventListener('click', () =&gt; console.log('按钮'));
+outer.addEventListener('click', () =&gt; console.log('外层冒泡'));
+// 点击按钮：外层捕获 → 按钮 → 外层冒泡
+&lt;/script&gt;</code></pre><h2>target 和 currentTarget</h2><p><code>event.target</code> 是事件发生的目标；<code>event.currentTarget</code> 是当前执行监听器的元素。借助冒泡，可以在父元素上统一处理子元素事件，这叫事件委托。</p><pre><code>const list = document.querySelector('#list');
+list.addEventListener('click', (event) =&gt; {
+  const button = event.target.closest('button');
+  if (!button || !list.contains(button)) return;
+  console.log('选择课程：', button.textContent);
+});</code></pre><p>上例需要页面中有 id 为 list、内部包含按钮的元素。即使之后添加按钮，也能由父元素处理。</p><h2>阻止默认行为与传播</h2><p><code>preventDefault()</code> 阻止可取消事件的默认行为，例如阻止表单直接提交；<code>stopPropagation()</code> 阻止事件继续传播。两者作用不同，也不会互相替代。</p><pre><code>const form = document.querySelector('form');
+form.addEventListener('submit', (event) =&gt; {
+  event.preventDefault(); // 不执行浏览器默认提交
+  console.log('先检查表单');
+});</code></pre><p>移除监听器时，需传入注册时同一个函数引用。组件销毁时清理监听器，避免重复响应或不必要的引用。</p><div class="note">练习：给列表添加三个按钮，在父元素上监听点击，输出被点击按钮的文字。</div>`}
+);
+const nav=document.querySelector('#nav'),content=document.querySelector('#content'),search=document.querySelector('#search');let current=0;function renderNav(){let q=search.value.trim().toLowerCase(),group='';nav.innerHTML='';lessons.forEach((l,i)=>{if(!(l.title+l.desc+l.body.replace(/<[^>]+>/g,'')).toLowerCase().includes(q))return;if(l.group!==group){group=l.group;let x=document.createElement('div');x.className='group';x.textContent=group;nav.append(x)}let b=document.createElement('button');b.textContent=l.title;b.className=i===current?'active':'';b.onclick=()=>{current=i;location.hash=encodeURIComponent(l.title);render();window.scrollTo(0,0)};nav.append(b)});if(!nav.children.length)nav.textContent='没有找到相关课程';}function render(){let l=lessons[current];content.innerHTML='<div class="hero"><div class="eyebrow">'+l.group+' / 学习指南</div><h1>'+l.title+'</h1><p class="intro">'+l.desc+'</p></div>'+l.body;renderNav();document.title=l.title+' | 前端研习室'}function fromHash(){let i=lessons.findIndex(l=>encodeURIComponent(l.title)===location.hash.slice(1));if(i>=0)current=i;render()}search.addEventListener('input',renderNav);window.addEventListener('hashchange',fromHash);fromHash();
+</script></body></html>
