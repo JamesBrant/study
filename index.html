@@ -374,5 +374,34 @@ li:nth-child(even) { background: #f5f7fb; }</code></pre><p>focus 选中获得焦
 .card { padding: var(--space); border: 1px solid var(--brand); }
 .button { color: white; background: var(--brand); }</code></pre><p>自定义属性以两个连字符开头，使用 var() 读取；修改变量可以统一调整多处样式。它们遵循层叠和继承规则。</p><div class="note">练习：制作课程卡片，使用语义化标签、Grid 布局和 CSS 变量，并让窄屏时卡片变成单列。参考 <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTML">MDN HTML</a> 和 <a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS">MDN CSS</a>。</div>`});
 
-const nav=document.querySelector('#nav'),content=document.querySelector('#content'),search=document.querySelector('#search');let current=0;function renderNav(){let q=search.value.trim().toLowerCase(),group='';nav.innerHTML='';lessons.forEach((l,i)=>{if(!(l.title+l.desc+l.body.replace(/<[^>]+>/g,'')).toLowerCase().includes(q))return;if(l.group!==group){group=l.group;let x=document.createElement('div');x.className='group';x.textContent=group;nav.append(x)}let b=document.createElement('button');b.textContent=l.title;b.className=i===current?'active':'';b.onclick=()=>{current=i;location.hash=encodeURIComponent(l.title);render();window.scrollTo(0,0)};nav.append(b)});if(!nav.children.length)nav.textContent='没有找到相关课程';}function render(){let l=lessons[current];content.innerHTML='<div class="hero"><div class="eyebrow">'+l.group+' / 学习指南</div><h1>'+l.title+'</h1><p class="intro">'+l.desc+'</p></div>'+l.body;renderNav();document.title=l.title+' | 前端研习室'}function fromHash(){let i=lessons.findIndex(l=>encodeURIComponent(l.title)===location.hash.slice(1));if(i>=0)current=i;render()}search.addEventListener('input',renderNav);window.addEventListener('hashchange',fromHash);fromHash();
+lessons.push(
+{group:'资深进阶',title:'无障碍与用户体验',desc:'让键盘、屏幕阅读器和不同能力的用户都能使用页面。',body:`<h2>从原生元素开始</h2><p>使用语义化的按钮、链接和表单，可以获得浏览器提供的键盘行为和名称。不要只依靠颜色表达错误，文字说明也很重要。</p><pre><code>&lt;label for="email"&gt;邮箱&lt;/label&gt;
+&lt;input id="email" type="email" aria-describedby="email-help"&gt;
+&lt;p id="email-help"&gt;请输入常用邮箱&lt;/p&gt;
+&lt;button type="button"&gt;保存&lt;/button&gt;</code></pre><h2>检查清单</h2><ul><li>只用 Tab、Shift+Tab 和 Enter 操作，确认焦点可见且顺序合理。</li><li>图片提供合适的 alt；纯装饰图片使用空 alt。</li><li>表单错误应有文字提示，颜色对比足够清晰；动态提示可考虑 aria-live。</li><li>尊重用户的减少动画偏好，结合屏幕阅读器测试。</li></ul><div class="note">练习：关闭鼠标，完成一次搜索或表单提交。参考 <a href="https://developer.mozilla.org/zh-CN/docs/Learn_web_development/Core/Accessibility">MDN 无障碍指南</a>。</div>`},
+{group:'框架与工程',title:'Git 与团队协作',desc:'理解版本、分支和远程仓库，安全地记录和分享代码。',body:`<h2>日常工作流</h2><p>Git 记录项目历史。工作区是正在修改的文件，暂存区是准备提交的内容，提交是一次有说明的版本快照。</p><pre><code>git status                 # 查看修改
+git switch -c feature/menu # 创建并切换分支
+git add index.html         # 暂存指定文件
+git diff --cached          # 检查即将提交的内容
+git commit -m "添加课程目录"
+git push -u origin feature/menu</code></pre><p>提交前检查变更，不要提交密码、密钥或本地私密配置。推送后可通过代码评审合并分支。</p><h2>处理冲突</h2><p>合并时如果同一处修改冲突，Git 会标记冲突内容。阅读双方改动，保留正确结果，删除冲突标记，测试后暂存并完成合并。不要未经确认强制推送共享分支。</p><pre><code>git status  # 查看冲突文件
+# 手动解决冲突并验证
+git add index.html
+git commit</code></pre><div class="note">练习：创建分支，修改标题并提交，再查看 git log 和 git diff。</div>`},
+{group:'框架与工程',title:'Node.js 与接口基础',desc:'了解前端工具运行环境以及与服务端协作的基本方式。',body:`<h2>Node.js 用来做什么</h2><p>Node.js 可以在浏览器外运行 JavaScript，常用于构建工具、脚本和服务端程序。npm 管理项目依赖；package.json 记录依赖和脚本，锁文件帮助保持安装结果一致。</p><h2>一个最小 HTTP 服务</h2><pre><code>// 保存为 server.cjs，运行 node server.cjs
+const http = require('node:http');
+http.createServer((req, res) =&gt; {
+  if (req.url === '/api/hello') {
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({ message: '你好' }));
+    return;
+  }
+  res.writeHead(404);
+  res.end('Not Found');
+}).listen(3000, '127.0.0.1');</code></pre><p>访问本机的 <code>http://127.0.0.1:3000/api/hello</code> 可看到 JSON。实际接口还需要处理输入校验、认证、错误和日志；不要把示例直接当作完整生产服务。</p><div class="note">练习：为接口增加一个课程列表，再用 fetch 读取，并处理请求失败。</div>`}
+);
+
+const groupOrder = ['WEB 基础', '浏览器与网络', '框架与工程', '资深进阶'];
+lessons.sort((a, b) => groupOrder.indexOf(a.group) - groupOrder.indexOf(b.group));
+const nav=document.querySelector('#nav'),content=document.querySelector('#content'),search=document.querySelector('#search');let current=0;function renderNav(){let q=search.value.trim().toLowerCase(),group='';nav.innerHTML='';lessons.forEach((l,i)=>{if(!(l.title+l.desc+l.body.replace(/<[^>]+>/g,'')).toLowerCase().includes(q))return;if(l.group!==group){group=l.group;let x=document.createElement('div');x.className='group';x.textContent=group;nav.append(x)}let b=document.createElement('button');b.textContent=l.title;b.className=i===current?'active':'';if(i===current)b.setAttribute('aria-current','page');b.onclick=()=>{current=i;location.hash=encodeURIComponent(l.title);render();window.scrollTo(0,0)};nav.append(b)});if(!nav.children.length)nav.textContent='没有找到相关课程';}function render(){let l=lessons[current];content.innerHTML='<div class="hero"><div class="eyebrow">'+l.group+' / 学习指南</div><h1>'+l.title+'</h1><p class="intro">'+l.desc+'</p></div>'+l.body;renderNav();document.title=l.title+' | 前端研习室'}function fromHash(){let i=lessons.findIndex(l=>encodeURIComponent(l.title)===location.hash.slice(1));current=i>=0?i:0;render()}search.addEventListener('input',renderNav);window.addEventListener('hashchange',fromHash);fromHash();
 </script></body></html>
